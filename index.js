@@ -14,101 +14,67 @@ const cart = [];
 // ------------------ Complete the functions written below ------------------------------ //
 
 function logItemNames() {
-  //TODO: use the .forEach() method to log out the name of each item
   items.forEach((item) => {
     console.log(item.name);
   });
 }
 
-/**
- * @param {number} id
- * @returns {{id: number, name: string, price: number, category: string, inventory: number}} item
- */
 function findItemById(id) {
-  // TODO: Use the .find() method to return the item who's id matches the passed in id
-  const userInput = prompt("Please enter the ID of the product.");
-  const idToFind = parseInt(userInput, 10);
-  const foundItem = items.find((item) => item.id === idToFind);
+  const foundItem = items.find((item) => item.id === id);
+  return foundItem;
 }
 
-/**
- * @returns {items[]} Returns a new array with capitalized names
- */
 function capitalizeNames() {
-  // TODO:  Use the .map() and possibly .slice() methods and return a new items array with the item names capitalized
-  // DO NOT MUTATE THE ORIGINAL ARRAY IN YOU LOGIC
-  const capitalizeNames = items.map((item) => {
+  const capitalizedNames = items.map((item) => {
     return {
       ...item,
       name: item.name.charAt(0).toUpperCase() + item.name.slice(1),
     };
   });
+  return capitalizedNames;
 }
-
-/**
- * @returns {number} the sum of all inventory items
- */
 
 function calculateTotalInventory() {
-  // TODO Use the .reduce() method to return the total number of items in inventory
-  const calculateTotalInventory = items.reduce((accumulator, item) => {
+  const totalInventory = items.reduce((accumulator, item) => {
     return accumulator + item.inventory;
   }, 0);
+  return totalInventory;
 }
 
-/**
- * @returns {number} the total price of all inventory items combined
- */
 function calculateAllInventoryPrice() {
-  // TODO Use the .reduce() method to return the total price of all the items in inventory
-  const calculateAllInventoryPrice = items.reduce((accumulator, item) => {
+  const totalInventoryPrice = items.reduce((accumulator, item) => {
     return accumulator + item.price * item.inventory;
   }, 0);
+  return totalInventoryPrice;
 }
 
-/**
- * @param {string} name
- * @returns {number} the price of the item passed in
- */
 function getItemPriceByName(name) {
-  // TODO: Use your knowledge of objects and arrays to get the price of the item passed in
-  const getItemPriceByName = prompt(
-    "Please enter the name of the item"
-  ).toLowerCase();
   const priceByName = items.find(
-    (item) => item.name.toLowerCase() === getItemPriceByName
+    (item) => item.name.toLowerCase() === name.toLowerCase()
   );
+  return priceByName ? priceByName.price : "Item not found";
 }
 
-/**
- * @param {categoryId} id of category to find
- * @returns {items[]} array of all items which belong to the given category
- */
 function filterItemsByCategoryId(categoryId) {
-  // TODO: use the .filter() method to filter out all items which don't belong the passed in category
-  const filterItemsByCategoryId = parseInt(prompt(
-    "Please enter the categoryId to filter"
-  ), 10);
-  const filteredItems = items.filter(
-    (item) => item.category === filterItemsByCategoryId
-  );
+  const filteredItems = items.filter((item) => item.categoryId === categoryId);
+  return filteredItems;
 }
 
 function logCartItems() {
-  // TODO: Loop through your cart and use the indexes to log the names of all items in your cart
-  const cart = [items];
-  for (let i = 0; items.length; i++);
+  for (let i = 0; i < cart.length; i++) {
+    const item = items.find((item) => item.id === cart[i]);
+    if (item) {
+      console.log(`Item ${i + 1}: ${item.name}`);
+    }
+  }
 }
 
-/**
- * @returns { number } returns the total price of items in your cart
- */
 function calculateTotalCartPrice() {
-  // TODO: Loop through your cart and return the total price of all items in your cart
-  const cart = [items];
-  const calculateTotalCartPrice = cart.reduce((accumulator, item) => {
-    return accumulator + item.price * item.inventory;
+  const totalCartPrice = cart.reduce((accumulator, itemId) => {
+    const item = items.find((item) => item.id === itemId);
+    return item ? accumulator + item.price : accumulator;
   }, 0);
+  return totalCartPrice;
 }
 
 // --------------------- DO NOT CHANGE THE CODE BELOW ------------------------ //
@@ -117,7 +83,6 @@ const ids = prompt(
   "enter numbers separated by commas for the ids of the items you want to add to your cart",
   "1, 3, 5"
 );
-// Split the string of numbers into an array of strings.
 const idArr = ids.split(", ");
 
 idArr.forEach((id) => cart.push(+id));
